@@ -29,6 +29,7 @@ class App extends Component {
     }
     this.onDragStop = this.onDragStop.bind(this);
     this.getLocations = this.getLocations.bind(this);
+    this.plotData = this.plotData.bind(this);
   }
   componentDidMount() {
     map.initMap((zip_code) => {
@@ -61,8 +62,14 @@ class App extends Component {
   }
   getLocations() {
     fetch(`http://mediscore.herokuapp.com/api/hospitals?zip=90650&imagingefficiency=${this.state.classifier.imagingefficiency}&timelyeffectivecare=${this.state.classifier.timelyeffectivecare}&totalperformance=${this.state.classifier.totalperformance}`).then((response) => response.json()).then((jsonObj) => {
-      debugger;
+      this.plotData(jsonObj);
     })
+  }
+
+  plotData(data) {
+    for (var hospital of data) {
+      map.setMarker(hospital)
+    }
   }
   render() {
     return (

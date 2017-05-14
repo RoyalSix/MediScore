@@ -42,7 +42,16 @@ export function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 export function getZipCode(p, callback) {
-    const { latitude, longitude } =  p.coords;
+    const { latitude, longitude } = p.coords;
     fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyBa9bkdOvQKASseggqWGHG13Lq4IaVNBhs`)
-    .then((response) => response.json()).then(callback);
+        .then((response) => response.json()).then(callback);
+}
+
+export function setMarker(markerObj) {
+    var myLatLng = new google.maps.LatLng(markerObj.latitude, markerObj.longitude);
+    var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: markerObj.name
+    });
 }
