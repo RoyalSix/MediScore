@@ -4,7 +4,7 @@
 // locate you.
 /* eslint-disable no-undef */
 var map, infoWindow;
-export function initMap() {
+export function initMap(callback) {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -34.397, lng: 150.644 },
         zoom: 6
@@ -13,22 +13,23 @@ export function initMap() {
 
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
+        navigator.geolocation.getCurrentPosition((position) => {
             var pos = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
+            this.getZipCode(position, callback)
 
             infoWindow.setPosition(pos);
             infoWindow.setContent('Location found.');
             infoWindow.open(map);
             map.setCenter(pos);
         }, function () {
-            handleLocationError(true, infoWindow, map.getCenter());
+            this.handleLocationError(true, infoWindow, map.getCenter());
         });
     } else {
         // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
+        this.handleLocationError(false, infoWindow, map.getCenter());
     }
 }
 
@@ -40,3 +41,8 @@ export function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
+export function getZipCode(p, callback) {
+    const { latitude, longitude } =  p.coords;
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyBa9bkdOvQKASseggqWGHG13Lq4IaVNBhs`)
+    .then((response) => response.json()).then(callback);
+}
