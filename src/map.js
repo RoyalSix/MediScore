@@ -4,7 +4,8 @@
 // locate you.
 /* eslint-disable no-undef */
 var map, infoWindow;
-export function initMap(callback) {
+import * as api from './api.js';
+export function initMap(zoom = 6, callback) {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -34.397, lng: 150.644 },
         zoom: 6
@@ -21,7 +22,7 @@ export function initMap(callback) {
             this.getZipCode(position, callback)
 
             infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
+            infoWindow.setContent('You are here.');
             infoWindow.open(map);
             map.setCenter(pos);
         }, function () {
@@ -54,4 +55,17 @@ export function setMarker(markerObj) {
         map: map,
         title: markerObj.name
     });
+    marker.addListener('click', () => {
+        api.showWebsite(markerObj.website);
+    });
+
+}
+
+export function setMapFromMarker(data) {
+    var bounds = new google.maps.LatLngBounds();
+    for (var location of data) {
+        var item = new google.maps.LatLng(location.latitude, location.longitude);
+        bounds.extend(item);
+    }
+    map.fitBounds(bounds);
 }

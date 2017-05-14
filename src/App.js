@@ -32,7 +32,7 @@ class App extends Component {
     this.plotData = this.plotData.bind(this);
   }
   componentDidMount() {
-    map.initMap((zip_code) => {
+    map.initMap(null, (zip_code) => {
       this.setState({ zip_code:zip_code.results["0"].address_components[5].short_name })
     });
   }
@@ -70,6 +70,7 @@ class App extends Component {
     for (var hospital of data) {
       map.setMarker(hospital)
     }
+    map.setMapFromMarker(data);
   }
   render() {
     return (
