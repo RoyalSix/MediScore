@@ -6,8 +6,8 @@ import * as api from './api.js';
 import ClassItem from './ClassItem';
 var ReactGridLayout = require('react-grid-layout');
 const CLASS_ITEMS = [
-  'Mortality',
-  'Malpractice',
+  'total performance',
+  'timely care',
   'Quality Performance',
   'Physician'
 ]
@@ -43,7 +43,8 @@ class App extends Component {
 
     for (var classItem of CLASS_ITEMS) {
       layout.push({ i: classItem, x: 0, y: 0, w: 1, h: 2 })
-      renderItems.push(<div style={{ alignItems:'center', justifyContent:'center', display:'flex', fontSize:22, border: 'solid', borderWidth: 2, borderColor: 'black', backgroundColor: 'grey', borderRadius: 3 }} key={classItem}>
+      renderItems.push(<div style={{ alignItems:'center', justifyContent:'center', display:'flex', fontSize:22, border: 'solid', borderWidth: 2, borderColor: 'grey',opacity:.9
+      , backgroundColor: 'white', borderRadius: 3 }} key={classItem}>
         <div>{classItem.toUpperCase()}</div>
       </div>)
     }
