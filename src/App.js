@@ -20,27 +20,33 @@ class App extends Component {
         {
           key: 'imagingefficiency',
           title: 'Imaging Efficiency',
-          value: 1
+          value: 1,
+          description:"This dataset includes the hospital data for the Outpatient Imaging Efficiency Core Measures.These Core Measures give you information about hospitals' use of medical imaging tests for outpatients. Examples of medical imaging tests include CT Scans, MRIs, and mammograms."
         },
         {
           key: 'timelyeffectivecare',
           title: 'Timely Effective Care',
-          value: 2
+          value: 2,
+          description:"This data set includes provider-level data for measures of heart attack care, heart failure care, pneumonia care, surgical care, emergency department care, preventive care, children's asthma care, stroke care, blood clot prevention and treatment, and pregnancy and delivery care."
         },
         {
           key: 'totalperformance',
           title: 'Total Performance',
-          value: 3
+          value: 3,
+          description:'This dataset contains a list of hospitals participating in the Hospital Value Based Purchasing Program and their Clinical Process of Care domain scores, Patient Experience of Care dimension scores, and Total Performance Scores.'
         },
         {
           key: 'consumerrating',
           title: 'Consumer Rating',
-          value: 4
+          value: 4,
+          description: "The Hospital Consumer Assessment of Healthcare Providers and Systems (HCAHPS) Patient Survey is a survey instrument and data collection methodology for measuring patients' perception of their hospital experience."
         }
       ],
       classifier: 'imagingefficiency',
       zip_code: null,
-      hospitals: null
+      hospitals: null,
+      description:"This dataset includes the hospital data for the Outpatient Imaging Efficiency Core Measures.These Core Measures give you information about hospitals' use of medical imaging tests for outpatients. Examples of medical imaging tests include CT Scans, MRIs, and mammograms."
+
     }
     this.onDragStop = this.onDragStop.bind(this);
     this.getLocations = this.getLocations.bind(this);
@@ -53,9 +59,15 @@ class App extends Component {
   }
 
   onDragStop(layout) {
-    var classifier = {};
+    var classifier = null;
     for (var classItem of layout) {
-      if ((classItem.y / 2) == 1) return this.setState({ classifier: classItem.i })
+      if (classItem.y == 0 && !classItem.i.includes('val')){
+        classifier = classItem.i;
+        this.setState({ classifier: classItem.i})
+      }
+    }
+    for (var el of this.state.classifiers) {
+      if (el.key == classifier) return this.setState({description: el.description})
     }
   }
   renderClassItems() {
@@ -68,7 +80,7 @@ class App extends Component {
       renderItems.push(<div style={buttonStyle} key={'val_' + i}>
         <div>{i + 1}</div>
       </div>)
-      layout.push({ i: classItem.key, x: 2, y: i, w: 4, h: 1 })
+      layout.push({ i: classItem.key, x: 2, y: i, w: 4, h: 1,})
       renderItems.push(<div style={buttonStyle} key={classItem.key}>
         <div>{classItem.title.toUpperCase()}</div>
       </div>)
@@ -77,6 +89,10 @@ class App extends Component {
     layout.push({ i: 'button', x: 0, y: this.state.classifiers.length, w: 5, h: 1, static: true })
     renderItems.push(<div style={buttonStyle} key={'button'}>
       <button style={{ height: '100%', width: '100%', backgroundColor: 'white', opacity: .9, fontSize: 19, }} onClick={this.getLocations}>SUBMIT</button>
+    </div>)
+        layout.push({ i: 'description', x: 0, y: this.state.classifiers.length + 1, w: 5, h: 3, static: true })
+    renderItems.push(<div style={buttonStyle} key={'description'}>
+      <button style={{ height: '100%', width: '100%', backgroundColor: 'white', opacity: .9, fontSize: 19, }} onClick={this.getLocations}>{this.state.description}</button>
     </div>)
     return (
       <ReactGridLayout
@@ -112,13 +128,14 @@ class App extends Component {
     return (
       <div style={{ backgroundColor: "#4990E2", height: '100vh', overflow: 'hidden' }} className="App">
         <center style={{ color: 'white', fontSize: 30, fontWeight: 100, marginTop: 20 }}>MediScore</center>
-        <div style={{ padding: 50, display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ paddingLeft: 50, }}>
             {this.renderClassItems()}
           </div>
           <div>
-          <div id="map" style={{ alignSelf: 'flex-end', backgroundColor: 'black', height: 338, width: 600 }} />
-          {this.state.hospitals ? <div style={{ alignItems:'center', marginTop:30, height: 100, overflowY: 'scroll',  backgroundColor:'white', borderRadius:2}}>{this.state.hospitals}</div> : null}
+          <center style={{margin:20, fontSize:30, color: 'white'}} >LOCATION</center>
+          <div id="map" style={{ marginTop:50, marginRight:50, marginLeft:50, alignSelf: 'flex-end', backgroundColor: 'black', height: 300, width: 500 }} />
+          {this.state.hospitals ? <div style={{ marginTop:10, marginRight:10, alignItems:'center', height: 100, overflowY: 'scroll',  backgroundColor:'white', borderRadius:2}}>{this.state.hospitals}</div> : null}
           </div>
         </div>
       </div>
